@@ -164,6 +164,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     let history_manager =
         Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
 
+    // Initialize the license manager
+    let license_manager = license::init_license_manager(app_handle)
+        .expect("Failed to initialize license manager");
+
     // Apply accelerator preferences before any model loads
     managers::transcription::apply_accelerator_settings(app_handle);
 
@@ -593,6 +597,13 @@ pub fn run(cli_args: CliArgs) {
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
             helpers::clamshell::is_laptop,
+            license::commands::activate_license,
+            license::commands::deactivate_license,
+            license::commands::get_license_status,
+            license::commands::get_usage_stats,
+            license::commands::get_remaining_usage,
+            license::commands::check_license_feature,
+            license::commands::check_license_usage_limit,
         ])
         .events(collect_events![managers::history::HistoryUpdatePayload,]);
 
@@ -638,11 +649,11 @@ pub fn run(cli_args: CliArgs) {
                     Target::new(if let Some(data_dir) = portable::data_dir() {
                         TargetKind::Folder {
                             path: data_dir.join("logs"),
-                            file_name: Some("handy".into()),
+                            file_name: Some("listening".into()),
                         }
                     } else {
                         TargetKind::LogDir {
-                            file_name: Some("handy".into()),
+                            file_name: Some("listening".into()),
                         }
                     })
                     .filter(|metadata| {
@@ -667,7 +678,7 @@ pub fn run(cli_args: CliArgs) {
         builder = builder.plugin(tauri_nspanel::init());
     }
 
-    // Single-instance forwards CLI args to an already-running Handy and exits.
+    // Single-instance forwards CLI args to an already-running 聆听 and exits.
     // That would make the headless path (--transcribe-file/--list-devices) a
     // silent no-op whenever the app is already open, so skip it in headless mode
     // and run a standalone instance instead.
@@ -749,7 +760,7 @@ pub fn run(cli_args: CliArgs) {
             // for portable mode (redirects WebView2 cache to portable Data dir)
             let mut win_builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
-                    .title("Handy")
+                    .title("聆听")
                     .inner_size(680.0, 570.0)
                     .min_inner_size(680.0, 570.0)
                     .resizable(true)

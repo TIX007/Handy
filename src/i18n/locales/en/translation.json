@@ -15,7 +15,8 @@
     "postProcessing": "Post Process",
     "history": "History",
     "debug": "Debug",
-    "about": "About"
+    "about": "About",
+    "license": "License"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -100,7 +101,7 @@
     },
     "permissions": {
       "title": "Permissions Required",
-      "description": "Handy needs a couple of permissions to work properly.",
+      "description": "聆听 needs a couple of permissions to work properly.",
       "microphone": {
         "title": "Microphone Access",
         "description": "Required to hear your voice for transcription."
@@ -158,7 +159,7 @@
     "general": {
       "title": "General",
       "shortcut": {
-        "title": "Handy Shortcuts",
+        "title": "聆听 Shortcuts",
         "description": "Configure keyboard shortcuts to trigger speech-to-text recording",
         "loading": "Loading shortcuts...",
         "none": "No shortcuts configured",
@@ -276,11 +277,11 @@
       },
       "autostart": {
         "label": "Launch on Startup",
-        "description": "Automatically start Handy when you log in to your computer."
+        "description": "Automatically start 聆听 when you log in to your computer."
       },
       "showTrayIcon": {
         "label": "Show Tray Icon",
-        "description": "Display the Handy icon in the system tray."
+        "description": "Display the 聆听 icon in the system tray."
       },
       "overlay": {
         "title": "Overlay Position",
@@ -456,7 +457,7 @@
       },
       "updateChecks": {
         "label": "Check for Updates",
-        "description": "Automatically check for new versions of Handy"
+        "description": "Automatically check for new versions of 聆听"
       },
       "soundTheme": {
         "label": "Sound Theme",
@@ -524,11 +525,11 @@
       "title": "About",
       "version": {
         "title": "Version",
-        "description": "Current version of Handy"
+        "description": "Current version of 聆听"
       },
       "appDataDirectory": {
         "title": "App Data Directory",
-        "description": "Location where Handy stores its data"
+        "description": "Location where 聆听 stores its data"
       },
       "sourceCode": {
         "title": "Source Code",
@@ -537,7 +538,7 @@
       },
       "supportDevelopment": {
         "title": "Support Development",
-        "description": "Help us continue building Handy",
+        "description": "Help us continue building 聆听",
         "button": "Donate"
       },
       "acknowledgments": {
@@ -545,7 +546,7 @@
         "whisper": {
           "title": "Whisper.cpp",
           "description": "High-performance inference of OpenAI's Whisper automatic speech recognition model",
-          "details": "Handy uses Whisper.cpp for fast, local speech-to-text processing. Thanks to the amazing work by Georgi Gerganov and contributors."
+          "details": "聆听 uses Whisper.cpp for fast, local speech-to-text processing. Thanks to the amazing work by Georgi Gerganov and contributors."
         }
       }
     }
@@ -593,7 +594,7 @@
   },
   "accessibility": {
     "permissionsRequired": "Accessibility Permissions Required",
-    "permissionsDescription": "Handy needs accessibility permissions to type transcribed text.",
+    "permissionsDescription": "聆听 needs accessibility permissions to type transcribed text.",
     "openSettings": "Open System Settings",
     "dismiss": "Dismiss"
   },
@@ -616,10 +617,52 @@
   },
   "appLanguage": {
     "title": "Application Language",
-    "description": "Change the language of the Handy interface"
+    "description": "Change the language of the 聆听 interface"
   },
   "overlay": {
     "transcribing": "Transcribing...",
     "processing": "Processing..."
+  },
+  "license": {
+    "title": "License Management",
+    "activate": "Activate License",
+    "deactivate": "Deactivate License",
+    "status": "License Status",
+    "tier": "License Tier",
+    "tierDescription": "Your current license tier determines available features",
+    "name": "Name",
+    "email": "Email",
+    "expires": "Expires",
+    "neverExpires": "Never",
+    "licenseKey": "License Key",
+    "active": "Active",
+    "expired": "Expired",
+    "gracePeriod": "Grace Period",
+    "gracePeriodEnds": "Grace period ends: {{date}}",
+    "usage": "Usage Statistics",
+    "currentMonth": "Current Month",
+    "transcriptions": "Transcriptions",
+    "recordingTime": "Recording Time",
+    "modelDownloads": "Model Downloads",
+    "unlimited": "Unlimited",
+    "remaining": "{{count}} remaining",
+    "remainingHours": "{{hours}} hours remaining",
+    "features": "Features",
+    "feature": {
+      "postProcessing": "Post Processing",
+      "customModels": "Custom Models",
+      "batchTranscription": "Batch Transcription"
+    },
+    "enterKey": "Enter License Key",
+    "enterKeyDescription": "Enter your license key to activate",
+    "dragDropLicense": "Drag and drop your license file here",
+    "selectFile": "Select File",
+    "activationHelp": "If you don't have a license, visit our website to purchase one.",
+    "upgradeRequired": "Upgrade Required",
+    "upgradePrompt": "Please upgrade your license to access this feature.",
+    "upgradePromptFeature": "The {{feature}} feature requires a higher license tier.",
+    "upgradePromptUsage": "You've reached the limit for {{type}} this month.",
+    "requiredTier": "Required Tier",
+    "upgrade": "Upgrade License"
   }
 }

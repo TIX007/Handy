@@ -1,6 +1,6 @@
-# Build Instructions
+# 构建说明
 
-This guide covers how to set up the development environment and build Handy from source across different platforms.
+本指南介绍如何设置开发环境并从源代码在不同平台上构建聆听。
 
 ## Prerequisites
 
@@ -62,81 +62,81 @@ ORT_LIB_LOCATION=$(brew --prefix onnxruntime)/lib ORT_PREFER_DYNAMIC_LINK=1 bun 
     cmake
   ```
 
-## Setup Instructions
+## 设置说明
 
-### 1. Clone the Repository
+### 1. 克隆仓库
 
 ```bash
 git clone git@github.com:cjpais/Handy.git
 cd Handy
 ```
 
-### 2. Install Dependencies
+### 2. 安装依赖
 
 ```bash
 bun install
 ```
 
-### 3. Start Dev Server
+### 3. 启动开发服务器
 
 ```bash
 bun tauri dev
 ```
 
-### 4. Build for Production
+### 4. 生产环境构建
 
 ```bash
 bun run tauri build
 ```
 
-This compiles a release binary and generates platform-specific bundles (deb, rpm, AppImage on Linux; dmg on macOS; msi on Windows).
+这将编译发布二进制文件并生成平台特定的捆绑包（Linux 上的 deb、rpm、AppImage；macOS 上的 dmg；Windows 上的 msi）。
 
-## Linux Install (from source)
+## Linux 安装（从源代码）
 
-The raw binary (`src-tauri/target/release/handy`) cannot run standalone — it needs Tauri resource files (tray icons, sounds, VAD model) to be co-located at the expected path.
+原始二进制文件 (`src-tauri/target/release/listening`) 无法单独运行——它需要 Tauri 资源文件（托盘图标、声音、VAD 模型）位于预期路径。
 
-**Install from the deb bundle** (works on any Linux distro):
+**从 deb 包安装**（适用于任何 Linux 发行版）：
 
 ```bash
 cd /tmp
-ar x /path/to/Handy/src-tauri/target/release/bundle/deb/Handy_*_amd64.deb data.tar.gz
+ar x /path/to/聆听/src-tauri/target/release/bundle/deb/聆听_*_amd64.deb data.tar.gz
 tar xzf data.tar.gz
-sudo cp usr/bin/handy /usr/bin/
-sudo cp -r usr/lib/Handy /usr/lib/
+sudo cp usr/bin/listening /usr/bin/
+sudo cp -r usr/lib/聆听 /usr/lib/
 sudo cp -r usr/share/icons/hicolor/* /usr/share/icons/hicolor/
-sudo cp usr/share/applications/Handy.desktop /usr/share/applications/
+sudo cp usr/share/applications/聆听.desktop /usr/share/applications/
 ```
 
-After subsequent rebuilds, only the binary needs re-copying:
+后续重新构建后，只需重新复制二进制文件：
 
 ```bash
-sudo cp src-tauri/target/release/handy /usr/bin/
+sudo cp src-tauri/target/release/listening /usr/bin/
 ```
 
-Resources only need re-copying if they change upstream (new icons, sounds, etc.).
+资源文件仅在上游更改时需要重新复制（新图标、声音等）。
 
-## Troubleshooting
+## 故障排除
 
-### AppImage build fails on Arch / rolling-release distros
+### AppImage 构建在 Arch / 滚动发布发行版上失败
 
-`linuxdeploy` bundles its own `strip` binary which is too old to process system libraries built with newer toolchains on rolling-release distros (Arch, CachyOS, Manjaro, EndeavourOS).
+`linuxdeploy` 捆绑了自己的 `strip` 二进制文件，该文件太旧，无法处理在滚动发布发行版（Arch、CachyOS、Manjaro、EndeavourOS）上使用新工具链构建的系统库。
 
-The error from Tauri:
+Tauri 的错误：
 
 ```
-Bundling Handy_*_amd64.AppImage
+Bundling 聆听_*_amd64.AppImage
 failed to bundle project `failed to run linuxdeploy`
 ```
 
-Tauri swallows the real linuxdeploy error. To see it, run linuxdeploy manually:
+Tauri 吞掉了真正的 linuxdeploy 错误。要查看它，请手动运行 linuxdeploy：
 
 ```bash
 cd src-tauri/target/release/bundle/appimage
 ~/.cache/tauri/linuxdeploy-x86_64.AppImage --appimage-extract-and-run \
-  --appdir Handy.AppDir --plugin gtk --output appimage
+  --appdir 聆听.AppDir --plugin gtk --output appimage
 ```
 
-**Workaround:** The binary, deb, and rpm bundles all build fine — only the AppImage step fails. To skip it:
+**解决方法：** 二进制文件、deb 和 rpm 包都可以正常构建——只有 AppImage 步骤失败。要跳过它：
 
 ```bash
 bun run tauri build -- --bundles deb

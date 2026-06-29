@@ -375,7 +375,12 @@ pub(crate) async fn process_transcription_output(
     }
 
     if post_process {
-        if let Some(processed_text) = post_process_transcription(&settings, &final_text).await {
+        // 许可证检查 - 后处理功能
+        let license_manager = app.state::<Arc<crate::license::LicenseManager>>();
+        if let Err(e) = license_manager.check_feature("post_processing") {
+            warn!("License check failed for post-processing: {}", e);
+            // 后处理失败不影响主流程，继续使用原始文本
+        } else if let Some(processed_text) = post_process_transcription(&settings, &final_text).await {
             post_processed_text = Some(processed_text.clone());
             final_text = processed_text;
 
@@ -404,6 +409,31 @@ impl ShortcutAction for TranscribeAction {
     fn start(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         let start_time = Instant::now();
         debug!("TranscribeAction::start called for binding: {}", binding_id);
+
+        // 许可证检查
+        let license_manager = app.state::<Arc<crate::license::LicenseManager>>();
+        if let Err(e) = license_manager.check_feature("transcription") {
+            warn!("License check failed for transcription: {}", e);
+            let _ = app.emit(
+                "recording-error",
+                RecordingErrorEvent {
+                    error_type: "license_error".to_string(),
+                    detail: Some(e.to_string()),
+                },
+            );
+            return;
+        }
+        if let Err(e) = license_manager.check_usage_limit("transcriptions") {
+            warn!("Usage limit reached for transcriptions: {}", e);
+            let _ = app.emit(
+                "recording-error",
+                RecordingErrorEvent {
+                    error_type: "usage_limit".to_string(),
+                    detail: Some(e.to_string()),
+                },
+            );
+            return;
+        }
 
         // Load model in the background
         let tm = app.state::<Arc<TranscriptionManager>>();
@@ -549,7 +579,7 @@ impl ShortcutAction for TranscribeAction {
                 } else {
                     // Save WAV concurrently with transcription
                     let sample_count = samples.len();
-                    let file_name = format!("handy-{}.wav", chrono::Utc::now().timestamp());
+                    let file_name = format!("listening-{}.wav", chrono::Utc::now().timestamp());
                     let wav_path = hm.recordings_dir().join(&file_name);
                     let wav_path_for_verify = wav_path.clone();
                     let samples_for_wav = samples.clone();
@@ -611,6 +641,16 @@ impl ShortcutAction for TranscribeAction {
                                 ) {
                                     error!("Failed to save history entry: {}", err);
                                 }
+                            }
+
+                            // 更新许可证使用统计
+                            let license_manager = ah.state::<Arc<crate::license::LicenseManager>>();
+                            let audio_duration = sample_count as f64 / 16000.0; // 16kHz 采样率
+                            if let Err(e) = license_manager.increment_usage("transcriptions", 1.0) {
+                                warn!("Failed to increment transcription usage: {}", e);
+                            }
+                            if let Err(e) = license_manager.increment_usage("recording_seconds", audio_duration) {
+                                warn!("Failed to increment recording time usage: {}", e);
                             }
 
                             if processed.final_text.is_empty() {

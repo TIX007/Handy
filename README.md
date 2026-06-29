@@ -1,28 +1,28 @@
-# Handy
+# 聆听
 
 [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.com/invite/WVBeWsNXK4)
 
-**A free, open source, and extensible speech-to-text application that works completely offline.**
+**一款免费、开源、可扩展的语音转文字应用，完全离线运行。**
 
-Handy is a cross-platform desktop application that provides simple, privacy-focused speech transcription. Press a shortcut, speak, and have your words appear in any text field. This happens on your own computer without sending any information to the cloud.
+聆听是一款跨平台桌面应用，提供简单、注重隐私的语音转录功能。按下快捷键，说话，然后您的文字就会出现在任何文本框中。这一切都发生在您自己的计算机上，不会向云端发送任何信息。
 
-## Why Handy?
+## 为什么选择聆听？
 
-Handy was created to fill the gap for a truly open source, extensible speech-to-text tool. As stated on [handy.computer](https://handy.computer):
+聆听旨在填补真正开源、可扩展的语音转文字工具的空白。正如 [handy.computer](https://handy.computer) 所述：
 
-- **Free**: Accessibility tooling belongs in everyone's hands, not behind a paywall
-- **Open Source**: Together we can build further. Extend Handy for yourself and contribute to something bigger
-- **Private**: Your voice stays on your computer. Get transcriptions without sending audio to the cloud
-- **Simple**: One tool, one job. Transcribe what you say and put it into a text box
+- **免费**：辅助工具应该属于每个人，而不是被付费墙阻挡
+- **开源**：我们可以一起构建更多。为您自己扩展聆听，并为更大的项目做出贡献
+- **私密**：您的声音留在您的计算机上。无需将音频发送到云端即可获得转录
+- **简单**：一个工具，一个任务。转录您所说的内容并将其放入文本框
 
-Handy isn't trying to be the best speech-to-text app—it's trying to be the most forkable one.
+聆听并不试图成为最好的语音转文字应用——它试图成为最容易被 fork 的应用。
 
-## How It Works
+## 工作原理
 
-1. **Press** a configurable keyboard shortcut to start/stop recording (or use push-to-talk mode)
-2. **Speak** your words while the shortcut is active
-3. **Release** and Handy processes your speech using Whisper
-4. **Get** your transcribed text pasted directly into whatever app you're using
+1. **按下**可配置的键盘快捷键开始/停止录音（或使用按住说话模式）
+2. **说话**，在快捷键激活时说出您的话
+3. **松开**，聆听使用 Whisper 处理您的语音
+4. **获取**转录的文本直接粘贴到您正在使用的任何应用中
 
 The process is entirely local:
 
@@ -39,9 +39,9 @@ The process is entirely local:
 1. Download the latest release from the [releases page](https://github.com/cjpais/Handy/releases) or the [website](https://handy.computer)
    - **macOS**: Also available via [Homebrew cask](https://formulae.brew.sh/cask/handy): `brew install --cask handy`
    - **Windows**: Also available via [winget](https://github.com/microsoft/winget-pkgs): `winget install cjpais.Handy` \
-     **Note:** The Homebrew cask and winget package are not maintained by the Handy developers.
+     **Note:** The Homebrew cask and winget package are not maintained by the 聆听 developers.
 2. Install the application
-3. Launch Handy and grant necessary system permissions (microphone, accessibility)
+3. Launch 聆听 and grant necessary system permissions (microphone, accessibility)
 4. Configure your preferred keyboard shortcuts in Settings
 5. Start transcribing!
 
@@ -53,13 +53,13 @@ For detailed build instructions including platform-specific requirements, see [B
 
 <a href="https://www.raycast.com/mattiacolombomc/handy" title="Install Handy Raycast Extension"><img src="https://www.raycast.com/mattiacolombomc/handy/install_button@2x.png?v=1.1" height="64" style="height: 64px;" alt="Install handy Raycast Extension" /></a>
 
-Control Handy from [Raycast](https://www.raycast.com) — start/stop recording, browse transcript history, manage dictionary, switch models and languages.
+Control 聆听 from [Raycast](https://www.raycast.com) — start/stop recording, browse transcript history, manage dictionary, switch models and languages.
 
 [Source](https://github.com/mattiacolombomc/raycast-handy) · by [@mattiacolombomc](https://github.com/mattiacolombomc)
 
 ## Architecture
 
-Handy is built as a Tauri application combining:
+聆听 is built as a Tauri application combining:
 
 - **Frontend**: React + TypeScript with Tailwind CSS for the settings UI
 - **Backend**: Rust for system integration, audio processing, and ML inference
@@ -73,7 +73,7 @@ Handy is built as a Tauri application combining:
 
 ### Debug Mode
 
-Handy includes an advanced debug mode for development and troubleshooting. Access it by pressing:
+聆听 includes an advanced debug mode for development and troubleshooting. Access it by pressing:
 
 - **macOS**: `Cmd+Shift+D`
 - **Windows/Linux**: `Ctrl+Shift+D`

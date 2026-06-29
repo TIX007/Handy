@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to AI coding assistants working with code in this repository.
+本文件为在此代码库中工作的 AI 编码助手提供指导。
 
 ## Development Commands
 
@@ -49,168 +49,168 @@ curl -o src-tauri/resources/models/silero_vad_v4.onnx https://blob.handy.compute
 
 For detailed platform-specific build setup, see [BUILD.md](BUILD.md).
 
-## Architecture Overview
+## 架构概述
 
-Handy is a cross-platform desktop speech-to-text application built with Tauri 2.x (Rust backend + React/TypeScript frontend).
+聆听是一款跨平台桌面语音转文字应用，使用 Tauri 2.x 构建（Rust 后端 + React/TypeScript 前端）。
 
-### Backend Structure (src-tauri/src/)
+### 后端结构 (src-tauri/src/)
 
-- `lib.rs` - Main entry point, Tauri setup, manager initialization
-- `managers/` - Core business logic:
-  - `audio.rs` - Audio recording and device management
-  - `model.rs` - Model downloading and management
-  - `transcription.rs` - Speech-to-text processing pipeline
-  - `history.rs` - Transcription history storage
-- `audio_toolkit/` - Low-level audio processing:
-  - `audio/` - Device enumeration, recording, resampling
-  - `vad/` - Voice Activity Detection (Silero VAD)
-- `commands/` - Tauri command handlers for frontend communication
-- `cli.rs` - CLI argument definitions (clap derive)
-- `shortcut.rs` - Global keyboard shortcut handling
-- `settings.rs` - Application settings management
-- `overlay.rs` - Recording overlay window (platform-specific)
-- `signal_handle.rs` - `send_transcription_input()` reusable function
-- `utils.rs` - Platform detection helpers
+- `lib.rs` - 主入口点，Tauri 设置，管理器初始化
+- `managers/` - 核心业务逻辑：
+  - `audio.rs` - 音频录制和设备管理
+  - `model.rs` - 模型下载和管理
+  - `transcription.rs` - 语音转文字处理管道
+  - `history.rs` - 转录历史存储
+- `audio_toolkit/` - 底层音频处理：
+  - `audio/` - 设备枚举、录制、重采样
+  - `vad/` - 语音活动检测 (Silero VAD)
+- `commands/` - Tauri 命令处理器，用于前端通信
+- `cli.rs` - CLI 参数定义 (clap derive)
+- `shortcut.rs` - 全局键盘快捷键处理
+- `settings.rs` - 应用设置管理
+- `overlay.rs` - 录制悬浮窗（平台特定）
+- `signal_handle.rs` - `send_transcription_input()` 可复用函数
+- `utils.rs` - 平台检测辅助工具
 
-### Frontend Structure (src/)
+### 前端结构 (src/)
 
-- `App.tsx` - Main component with onboarding flow
-- `components/` - React UI components:
-  - `settings/` - Settings UI
-  - `model-selector/` - Model management interface
-  - `onboarding/` - First-run experience
-  - `overlay/` - Recording overlay UI
-  - `update-checker/` - App update notifications
-  - `shared/`, `ui/`, `icons/`, `footer/` - Shared components
-- `hooks/useSettings.ts` - Settings state management hook
-- `stores/settingsStore.ts` - Zustand store for settings
-- `bindings.ts` - Auto-generated Tauri type bindings (via tauri-specta)
-- `overlay/` - Recording overlay window entry point
-- `lib/types.ts` - Shared TypeScript type definitions
+- `App.tsx` - 主组件，包含引导流程
+- `components/` - React UI 组件：
+  - `settings/` - 设置界面
+  - `model-selector/` - 模型管理界面
+  - `onboarding/` - 首次运行体验
+  - `overlay/` - 录制悬浮窗 UI
+  - `update-checker/` - 应用更新通知
+  - `shared/`, `ui/`, `icons/`, `footer/` - 共享组件
+- `hooks/useSettings.ts` - 设置状态管理 hook
+- `stores/settingsStore.ts` - Zustand 设置存储
+- `bindings.ts` - 自动生成的 Tauri 类型绑定 (via tauri-specta)
+- `overlay/` - 录制悬浮窗入口点
+- `lib/types.ts` - 共享 TypeScript 类型定义
 
-### Key Architecture Patterns
+### 关键架构模式
 
-**Manager Pattern:** Core functionality organized into managers (Audio, Model, Transcription) initialized at startup and managed via Tauri state.
+**管理器模式：** 核心功能组织成管理器（音频、模型、转录），在启动时初始化并通过 Tauri 状态管理。
 
-**Command-Event Architecture:** Frontend → Backend via Tauri commands; Backend → Frontend via events.
+**命令-事件架构：** 前端 → 后端通过 Tauri 命令；后端 → 前端通过事件。
 
-**Pipeline Processing:** Audio → VAD → Whisper/Parakeet → Text output → Clipboard/Paste
+**管道处理：** 音频 → VAD → Whisper/Parakeet → 文本输出 → 剪贴板/粘贴
 
-**State Flow:** Zustand → Tauri Command → Rust State → Persistence (tauri-plugin-store)
+**状态流：** Zustand → Tauri 命令 → Rust 状态 → 持久化 (tauri-plugin-store)
 
-### Technology Stack
+### 技术栈
 
-**Core Libraries:**
+**核心库：**
 
-- `whisper-rs` - Local Whisper inference with GPU acceleration
-- `cpal` - Cross-platform audio I/O
-- `vad-rs` - Voice Activity Detection
-- `rdev` - Global keyboard shortcuts
-- `rubato` - Audio resampling
-- `rodio` - Audio playback for feedback sounds
+- `whisper-rs` - 本地 Whisper 推理，支持 GPU 加速
+- `cpal` - 跨平台音频 I/O
+- `vad-rs` - 语音活动检测
+- `rdev` - 全局键盘快捷键
+- `rubato` - 音频重采样
+- `rodio` - 反馈声音播放
 
-### Application Flow
+### 应用流程
 
-1. **Initialization:** App starts minimized to tray, loads settings, initializes managers
-2. **Model Setup:** First-run downloads preferred Whisper model (Small/Medium/Turbo/Large)
-3. **Recording:** Global shortcut triggers audio recording with VAD filtering
-4. **Processing:** Audio sent to Whisper model for transcription
-5. **Output:** Text pasted to active application via system clipboard
+1. **初始化：** 应用启动时最小化到托盘，加载设置，初始化管理器
+2. **模型设置：** 首次运行下载首选 Whisper 模型 (Small/Medium/Turbo/Large)
+3. **录制：** 全局快捷键触发带 VAD 过滤的音频录制
+4. **处理：** 音频发送到 Whisper 模型进行转录
+5. **输出：** 文本粘贴到活动应用的系统剪贴板
 
-### Settings System
+### 设置系统
 
-Settings are stored using Tauri's store plugin with reactive updates:
+设置使用 Tauri 的 store 插件存储，支持响应式更新：
 
-- Keyboard shortcuts (configurable, supports push-to-talk)
-- Audio devices (microphone/output selection)
-- Model preferences (Small/Medium/Turbo/Large Whisper variants)
-- Audio feedback and translation options
+- 键盘快捷键（可配置，支持按住说话）
+- 音频设备（麦克风/输出选择）
+- 模型偏好（Small/Medium/Turbo/Large Whisper 变体）
+- 音频反馈和翻译选项
 
-### Single Instance Architecture
+### 单实例架构
 
-The app enforces single instance behavior — launching when already running brings the settings window to front rather than creating a new process. Remote control flags (`--toggle-transcription`, etc.) work by launching a second instance that sends args to the running instance via `tauri_plugin_single_instance`, then exits.
+应用强制单实例行为——在已运行时启动会将设置窗口置于前台，而不是创建新进程。远程控制标志（`--toggle-transcription` 等）通过启动第二个实例工作，该实例通过 `tauri_plugin_single_instance` 将参数发送到运行中的实例，然后退出。
 
-## Internationalization (i18n)
+## 国际化 (i18n)
 
-All user-facing strings must use i18next translations. ESLint enforces this (no hardcoded strings in JSX).
+所有面向用户的字符串必须使用 i18next 翻译。ESLint 强制执行此规则（JSX 中不允许硬编码字符串）。
 
-**Adding new text:**
+**添加新文本：**
 
-1. Add key to `src/i18n/locales/en/translation.json`
-2. Use in component: `const { t } = useTranslation(); t('key.path')`
+1. 添加键到 `src/i18n/locales/en/translation.json`
+2. 在组件中使用：`const { t } = useTranslation(); t('key.path')`
 
-**File structure:**
+**文件结构：**
 
 ```
 src/i18n/
-├── index.ts           # i18n setup
-├── languages.ts       # Language metadata
+├── index.ts           # i18n 设置
+├── languages.ts       # 语言元数据
 └── locales/
-    ├── en/translation.json  # English (source)
+    ├── en/translation.json  # 英语（源）
     ├── de/, es/, fr/, ja/, ru/, zh/, ...
     └── ...
 ```
 
-For translation contribution guidelines, see [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md).
+有关翻译贡献指南，请参阅 [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md)。
 
-## Code Style
+## 代码风格
 
-**Rust:**
+**Rust：**
 
-- Run `cargo fmt` and `cargo clippy` before committing
-- Handle errors explicitly (avoid unwrap in production)
-- Use descriptive names, add doc comments for public APIs
+- 提交前运行 `cargo fmt` 和 `cargo clippy`
+- 显式处理错误（避免在生产环境中使用 unwrap）
+- 使用描述性名称，为公共 API 添加文档注释
 
-**TypeScript/React:**
+**TypeScript/React：**
 
-- Strict TypeScript, avoid `any` types
-- Functional components with hooks
-- Tailwind CSS for styling
-- Path aliases: `@/` → `./src/`
+- 严格 TypeScript，避免 `any` 类型
+- 使用 hooks 的函数组件
+- 使用 Tailwind CSS 进行样式设计
+- 路径别名：`@/` → `./src/`
 
-## CLI Parameters
+## CLI 参数
 
-Handy supports command-line parameters on all platforms for integration with scripts, window managers, and autostart configurations.
+聆听支持所有平台的命令行参数，用于与脚本、窗口管理器和自启动配置集成。
 
-**Implementation:** `cli.rs` (definitions), `main.rs` (parsing), `lib.rs` (applying), `signal_handle.rs` (shared logic)
+**实现：** `cli.rs`（定义）、`main.rs`（解析）、`lib.rs`（应用）、`signal_handle.rs`（共享逻辑）
 
-| Flag                     | Description                                                |
-| ------------------------ | ---------------------------------------------------------- |
-| `--toggle-transcription` | Toggle recording on/off on a running instance              |
-| `--toggle-post-process`  | Toggle recording with post-processing on/off               |
-| `--cancel`               | Cancel the current operation on a running instance         |
-| `--start-hidden`         | Launch without showing the main window (tray icon visible) |
-| `--no-tray`              | Launch without system tray (closing window quits the app)  |
-| `--debug`                | Enable debug mode with verbose (Trace) logging             |
+| 标志                       | 描述                                                       |
+| -------------------------- | ---------------------------------------------------------- |
+| `--toggle-transcription`   | 在运行实例上切换录制开/关                                  |
+| `--toggle-post-process`    | 切换带后处理的录制开/关                                    |
+| `--cancel`                 | 取消运行实例上的当前操作                                   |
+| `--start-hidden`           | 启动时不显示主窗口（托盘图标可见）                         |
+| `--no-tray`                | 启动时不显示系统托盘（关闭窗口退出应用）                   |
+| `--debug`                  | 启用调试模式，详细 (Trace) 日志                            |
 
-**Key design decisions:**
+**关键设计决策：**
 
-- CLI flags are runtime-only overrides — they do NOT modify persisted settings
-- Remote control flags work via `tauri_plugin_single_instance`: second instance sends args, then exits
-- `send_transcription_input()` in `signal_handle.rs` is shared between signal handlers and CLI
+- CLI 标志是运行时覆盖——它们不会修改持久化设置
+- 远程控制标志通过 `tauri_plugin_single_instance` 工作：第二个实例发送参数，然后退出
+- `signal_handle.rs` 中的 `send_transcription_input()` 在信号处理器和 CLI 之间共享
 
-## Debug Mode
+## 调试模式
 
-Access debug features: `Cmd+Shift+D` (macOS) or `Ctrl+Shift+D` (Windows/Linux)
+访问调试功能：`Cmd+Shift+D` (macOS) 或 `Ctrl+Shift+D` (Windows/Linux)
 
-## Platform Notes
+## 平台说明
 
-- **macOS**: Metal acceleration, accessibility permissions required for keyboard shortcuts
-- **Windows**: Vulkan acceleration, code signing
-- **Linux**: OpenBLAS + Vulkan, limited Wayland support, overlay uses GTK layer shell (disable with `HANDY_NO_GTK_LAYER_SHELL=1`)
+- **macOS**：Metal 加速，键盘快捷键需要辅助功能权限
+- **Windows**：Vulkan 加速，代码签名
+- **Linux**：OpenBLAS + Vulkan，有限的 Wayland 支持，overlay 使用 GTK layer shell（使用 `HANDY_NO_GTK_LAYER_SHELL=1` 禁用）
 
-## Troubleshooting
+## 故障排除
 
-See the [Troubleshooting](README.md#troubleshooting) section in README.md.
+请参阅 README.md 中的[故障排除](README.md#troubleshooting)部分。
 
-## GitHub workflow for AI coding assistants
+## AI 编码助手的 GitHub 工作流程
 
-**MANDATORY. Before opening any PR, issue, or discussion in this repo: you MUST read the relevant template file and follow it strictly.** That includes sections that look "ceremonial" — checklists, AI Assistance disclosures, "Human Written Description". A generic Summary/Test-plan layout is not acceptable.
+**强制性。在本仓库中打开任何 PR、issue 或讨论之前：您必须阅读相关模板文件并严格遵循。** 包括看起来"仪式性"的部分——清单、AI 协助披露、"人工撰写描述"。不接受通用的摘要/测试计划布局。
 
-- **Opening a PR:** Read [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md). Every section listed there is mandatory. If a section requires a human-written paragraph (e.g. "Human Written Description"), leave a clear TODO placeholder and ask the human contributor to fill it in — do not invent their voice.
-- **Opening an issue:** Read [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/). Blank issues are disabled; pick the right template (`bug_report.md` for bugs). Feature requests do not belong in issues — they go to [Discussions](https://github.com/cjpais/Handy/discussions) (see `.github/ISSUE_TEMPLATE/config.yml`).
-- **Proposing a feature:** Handy is under a feature freeze. New features require community support gathered in [Discussions](https://github.com/cjpais/Handy/discussions) before any PR is opened — see the PR template's "Community Feedback" section.
-- **Translations:** Follow [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md).
-- **Full contributor workflow:** [CONTRIBUTING.md](CONTRIBUTING.md).
+- **打开 PR：** 阅读 [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md)。那里列出的每个部分都是强制性的。如果某个部分需要人工撰写的段落（例如"人工撰写描述"），请留下明确的 TODO 占位符并请人类贡献者填写——不要代替他们发言。
+- **打开 issue：** 阅读 [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/)。空白 issue 被禁用；选择正确的模板（`bug_report.md` 用于错误报告）。功能请求不属于 issue——它们应该去 [Discussions](https://github.com/cjpais/Handy/discussions)（参见 `.github/ISSUE_TEMPLATE/config.yml`）。
+- **提出功能：** 聆听处于功能冻结状态。新功能需要在 [Discussions](https://github.com/cjpais/Handy/discussions) 中获得社区支持，然后才能打开 PR——参见 PR 模板的"社区反馈"部分。
+- **翻译：** 遵循 [CONTRIBUTING_TRANSLATIONS.md](CONTRIBUTING_TRANSLATIONS.md)。
+- **完整贡献者工作流程：** [CONTRIBUTING.md](CONTRIBUTING.md)。
 
-**Commits:** Use conventional commit prefixes (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`). Focus the message on _why_, not _what_.
+**提交：** 使用常规提交前缀（`feat:`、`fix:`、`docs:`、`refactor:`、`chore:`）。消息重点放在*为什么*，而不是*什么*。

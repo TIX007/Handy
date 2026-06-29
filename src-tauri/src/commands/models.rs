@@ -26,12 +26,25 @@ pub async fn get_model_info(
 pub async fn download_model(
     app_handle: AppHandle,
     model_manager: State<'_, Arc<ModelManager>>,
+    license_manager: State<'_, Arc<crate::license::LicenseManager>>,
     model_id: String,
 ) -> Result<(), String> {
+    // 许可证检查 - 模型下载限制
+    license_manager
+        .check_usage_limit("model_downloads")
+        .map_err(|e| e.to_string())?;
+
     let result = model_manager
         .download_model(&model_id)
         .await
         .map_err(|e| e.to_string());
+
+    if result.is_ok() {
+        // 下载成功，增加使用计数
+        if let Err(e) = license_manager.increment_usage("model_downloads", 1.0) {
+            log::warn!("Failed to increment model download usage: {}", e);
+        }
+    }
 
     if let Err(ref error) = result {
         let _ = app_handle.emit(
